@@ -7,7 +7,6 @@ DIRF_FIXTURE = str(pathlib.Path().resolve()) + "/tests/fixture/dirf.txt"
 
 class TestArvoreDirf:
     def test_monta_arvore(self):
-
         arvore = ArvoreDIRF(DIRF_FIXTURE)
         arvore.monta_arvore()
 
@@ -56,3 +55,63 @@ class TestArvoreDirf:
         dtpse2 = tpse7.filhos[2]
         assert dtpse1.dados[0] == "00000000018"
         assert dtpse2.dados[0] == "00000000020"
+
+    def test_normalizacao(self):
+        arvore = ArvoreDIRF(DIRF_FIXTURE)
+        arvore.monta_arvore()
+        tipos_para_imprimir = ["BPFDEC", "INFPA", "RTPA"]
+
+        dict_normalizado = arvore.normaliza_sub_arvore(tipos_para_imprimir)
+
+        dict_esperado = [
+            {
+                "BPFDEC_1": "00000000004",
+                "BPFDEC_2": "ANDRE",
+                "BPFDEC_3": "",
+                "BPFDEC_4": "S",
+                "BPFDEC_5": "N",
+                "INFPA_1": "00000000005",
+                "INFPA_2": "19701221",
+                "INFPA_3": "LUCY",
+                "INFPA_4": "10",
+                "RTPA_1": "79615",
+                "RTPA_2": "98017",
+                "RTPA_3": "79615",
+                "RTPA_4": "107642",
+                "RTPA_5": "92625",
+                "RTPA_6": "86448",
+                "RTPA_7": "94154",
+                "RTPA_8": "99233",
+                "RTPA_9": "86448",
+                "RTPA_10": "86448",
+                "RTPA_11": "99695",
+                "RTPA_12": "118526",
+                "RTPA_13": "86744",
+            },
+            {
+                "BPFDEC_1": "00000000004",
+                "BPFDEC_2": "ANDRE",
+                "BPFDEC_3": "",
+                "BPFDEC_4": "S",
+                "BPFDEC_5": "N",
+                "INFPA_1": "00000000056",
+                "INFPA_2": "19701221",
+                "INFPA_3": "LUCI",
+                "INFPA_4": "10",
+                "RTPA_1": "669615",
+                "RTPA_2": "668017",
+                "RTPA_3": "79615",
+                "RTPA_4": "107642",
+                "RTPA_5": "92625",
+                "RTPA_6": "86448",
+                "RTPA_7": "94154",
+                "RTPA_8": "99233",
+                "RTPA_9": "86448",
+                "RTPA_10": "86448",
+                "RTPA_11": "99695",
+                "RTPA_12": "118526",
+                "RTPA_13": "86744",
+            },
+        ]
+
+        assert dict_normalizado == dict_esperado

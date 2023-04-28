@@ -1,4 +1,21 @@
+import pytest
+
 from src.no import No
+
+
+@pytest.fixture
+def arvore():
+    estrutura = {"A": ["B", "C"], "C": ["D", "E"]}
+
+    raiz = No(pai=None, tipo="A", dados=["DadoA"], estrutura=estrutura)
+    no_atual = raiz.adiciona_filho(["B", "DadoB1"])
+    no_atual = no_atual.adiciona_filho(["C", "DadoC1"])
+    no_atual = no_atual.adiciona_filho(["D", "DadoD1"])
+    no_atual = no_atual.adiciona_filho(["B", "DadoB2"])
+    no_atual = no_atual.adiciona_filho(["C", "DadoC2"])
+    no_atual = no_atual.adiciona_filho(["D", "DadoD2"])
+    no_atual = no_atual.adiciona_filho(["E", "DadoE1"])
+    return raiz
 
 
 class TestNo:
@@ -62,3 +79,61 @@ class TestNo:
         no_filho = raiz.adiciona_filho(["B", "DadoB1"])
         assert not raiz.eh_folha()
         assert no_filho.eh_folha()
+
+    def test_dados_como_dict(self):
+        dados_array = ["DadoA", "DadoB", "Dado3"]
+        no = No(pai=None, tipo="A", dados=dados_array, estrutura={})
+
+        dados_dict_esperado = {
+            "A_1": "DadoA",
+            "A_2": "DadoB",
+            "A_3": "Dado3",
+        }
+
+        assert no.dados_como_dict() == dados_dict_esperado
+
+    def test_normalizacao_hierarquias_1_e_2(self, arvore: No):
+        tipos_para_imprimir = ["A", "B"]
+        resultado = []
+        resultado_esperado = [
+            {"A_1": "DadoA", "B_1": "DadoB1"},
+            {"A_1": "DadoA", "B_1": "DadoB2"},
+        ]
+        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+
+        assert resultado == resultado_esperado
+
+    def test_normalizacao_hierarquias_1_a_3_com_1_tipo(self, arvore: No):
+        tipos_para_imprimir = ["A", "C", "D"]
+        resultado = []
+        resultado_esperado = [
+            {"A_1": "DadoA", "C_1": "DadoC1", "D_1": "DadoD1"},
+            {"A_1": "DadoA", "C_1": "DadoC2", "D_1": "DadoD2"},
+        ]
+        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+
+        assert resultado == resultado_esperado
+
+    def test_normalizacao_hierarquias_1_a_3_com_2_tipos(self, arvore: No):
+        tipos_para_imprimir = ["A", "C", "D", "E"]
+        resultado = []
+        resultado_esperado = [
+            {"A_1": "DadoA", "C_1": "DadoC1", "D_1": "DadoD1"},
+            {"A_1": "DadoA", "C_1": "DadoC2", "D_1": "DadoD2"},
+            {"A_1": "DadoA", "C_1": "DadoC2", "E_1": "DadoE1"},
+        ]
+        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+
+        assert resultado == resultado_esperado
+
+    def test_normalizacao_hierarquias_2_a_3_com_2_tipos(self, arvore: No):
+        tipos_para_imprimir = ["C", "D", "E"]
+        resultado = []
+        resultado_esperado = [
+            {"C_1": "DadoC1", "D_1": "DadoD1"},
+            {"C_1": "DadoC2", "D_1": "DadoD2"},
+            {"C_1": "DadoC2", "E_1": "DadoE1"},
+        ]
+        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+
+        assert resultado == resultado_esperado
