@@ -1,3 +1,6 @@
+import pandas as pd
+
+from src.dicionarios import funde_dicts_mesmas_chaves
 from src.no import No
 
 ESTRUTURA_DIRF = {
@@ -41,7 +44,7 @@ class ArvoreDIRF:
             else:
                 no_atual = no_atual.adiciona_filho(dado)
 
-    def normaliza_sub_arvore(self, tipos_pra_imprimir: list[str]) -> list[dict]:
+    def normaliza_sub_arvore(self, tipos: list[str]) -> list[dict]:
         """Normaliza os dados de uma sub-árvore em dicionários.
 
         Considerando a sub-árvore informada, os dados contidos nessa sub-árvore são
@@ -56,5 +59,23 @@ class ArvoreDIRF:
         impressas todas as linhas com os dados [C, D] e [C, E].
         """
         resultado = []
-        self.raiz.normaliza_sub_arvore({}, tipos_pra_imprimir, resultado)
+        self.raiz.normaliza_sub_arvore({}, tipos, resultado)
         return resultado
+
+    def converte_em_tabela(self, tipos: list[str], chaves: list[str]) -> pd.DataFrame:
+        """Converte a DIRF em uma tabela normalizada.
+
+        Os tipos de linhas da DIRF informados em `tipos` devem seguir a estrutura
+        explicada no método `normaliza_sub_arvore`.
+
+        A partir do dicionário criado pela normalização, serão convertidos em tabelas,
+        transformando os diversos dicionários com mesmas chaves em uma única linha,
+        como explicado pela função `funde_dicts_mesmas_chaves`.
+        """
+
+        dicionarios = self.normaliza_sub_arvore(tipos=tipos)
+        dict_fundidos = funde_dicts_mesmas_chaves(dicionarios, chaves)
+
+        df = pd.DataFrame.from_dict(dict_fundidos, orient="index")
+        df.reset_index(drop=True, inplace=True)
+        return df

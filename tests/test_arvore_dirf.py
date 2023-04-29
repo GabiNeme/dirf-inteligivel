@@ -1,5 +1,8 @@
 import pathlib
 
+import numpy as np
+import pandas as pd
+
 from src.arvore_dirf import ArvoreDIRF
 
 DIRF_FIXTURE = str(pathlib.Path().resolve()) + "/tests/fixture/dirf.txt"
@@ -115,3 +118,41 @@ class TestArvoreDirf:
         ]
 
         assert dict_normalizado == dict_esperado
+
+    def test_converte_em_tabela(self):
+        arvore = ArvoreDIRF(DIRF_FIXTURE)
+        arvore.monta_arvore()
+        df_resultado = arvore.converte_em_tabela(
+            tipos=["BPFDEC", "RTRT", "RIO"], chaves=["BPFDEC_1"]
+        )
+        dados_esperados = {
+            "BPFDEC_1": ["00000000002", "00000000003", "00000000004", "00000000007"],
+            "BPFDEC_2": ["JOAO", "ANNE", "ANDRE", "CELIA"],
+            "BPFDEC_3": ["", "", "", ""],
+            "BPFDEC_4": ["N", "N", "S", "N"],
+            "BPFDEC_5": ["N", "N", "N", "N"],
+            "RTRT_1": ["", "202575", "996306", "2872201"],
+            "RTRT_2": ["", "270100", "1227045", "2872201"],
+            "RTRT_3": ["", "202575", "1347741", "2872201"],
+            "RTRT_4": ["", "472676", "996306", "2872201"],
+            "RTRT_5": ["", "283605", "1159443", "2872201"],
+            "RTRT_6": ["", "222833", "1095937", "2915749"],
+            "RTRT_7": ["", "222833", "1192564", "3441173"],
+            "RTRT_8": ["", "", "1256240", "3178461"],
+            "RTRT_9": ["", "", "1095937", "3178461"],
+            "RTRT_10": ["", "", "1095937", "3178461"],
+            "RTRT_11": ["408527", "", "1262984", "3178461"],
+            "RTRT_12": ["371388", "", "1498773", "3178461"],
+            "RTRT_13": ["92847", "146709", "1100242", "3178461"],
+            "RIO_1": ["109179", "747670", "903542", np.nan],
+            "RIO_2": [
+                "Outros Rendimentos Isentos",
+                "Outros Rendimentos Isentos",
+                "Outros Rendimentos Isentos",
+                np.nan,
+            ],
+        }
+
+        df_esperado = pd.DataFrame(dados_esperados)
+
+        assert df_resultado.equals(df_esperado)
