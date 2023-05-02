@@ -75,10 +75,13 @@ class TestNo:
         estrutura = {"A": ["B"], "B": ["C", "D"]}
 
         raiz = No(pai=None, tipo="A", dados=["DadoA"], estrutura=estrutura)
-        assert raiz.eh_folha()
-        no_filho = raiz.adiciona_filho(["B", "DadoB1"])
         assert not raiz.eh_folha()
-        assert no_filho.eh_folha()
+        no_b = raiz.adiciona_filho(["B", "DadoB1"])
+        assert not no_b.eh_folha()
+        no_c = no_b.adiciona_filho(["C", "DadoC1"])
+        assert no_c.eh_folha()
+        no_d = no_b.adiciona_filho(["D", "DadoD1"])
+        assert no_d.eh_folha()
 
     def test_dados_como_dict(self):
         dados_array = ["DadoA", "DadoB", "Dado3"]

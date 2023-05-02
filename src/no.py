@@ -30,9 +30,9 @@ class No:
         )
 
     def eh_folha(self) -> bool:
-        """Verifica se é uma folha, ou seja, se não possui nós filhos."""
+        """Verifica se é uma folha, ou seja, se o tipo não permite nós filhos."""
 
-        return len(self.filhos) == 0
+        return len(self.possiveis_filhos) == 0
 
     def dados_como_dict(self) -> dict:
         dados_dict = {}
