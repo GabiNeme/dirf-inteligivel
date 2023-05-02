@@ -40,17 +40,16 @@ class No:
             dados_dict["{}_{}".format(self.tipo, i + 1)] = self.dados[i]
         return dados_dict
 
-    def normaliza_sub_arvore(self, prefixo, tipos_pra_imprimir, resultado) -> None:
-        if self.tipo not in tipos_pra_imprimir and len(self.filhos) == 0:
+    def normaliza_tronco_arvore(self, prefixo, tipos_pra_imprimir, resultado) -> None:
+        if self.tipo not in tipos_pra_imprimir:
             return
 
         novo_prefixo = prefixo.copy()
-        if self.tipo in tipos_pra_imprimir:
-            novo_prefixo.update(self.dados_como_dict())
+        novo_prefixo.update(self.dados_como_dict())
 
         if self.eh_folha():
             resultado.append(novo_prefixo)
             return
 
         for filho in self.filhos:
-            filho.normaliza_sub_arvore(novo_prefixo, tipos_pra_imprimir, resultado)
+            filho.normaliza_tronco_arvore(novo_prefixo, tipos_pra_imprimir, resultado)

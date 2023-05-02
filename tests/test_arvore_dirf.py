@@ -62,11 +62,34 @@ class TestArvoreDirf:
     def test_normalizacao(self):
         arvore = ArvoreDIRF(DIRF_FIXTURE)
         arvore.monta_arvore()
-        tipos_para_imprimir = ["BPFDEC", "INFPA", "RTPA"]
+        tipos_para_imprimir = ["Dirf", "DECPJ", "IDREC", "BPFDEC", "INFPA", "RTPA"]
 
-        dict_normalizado = arvore.normaliza_sub_arvore(tipos_para_imprimir)
+        dict_normalizado = arvore.normaliza_tronco_arvore(tipos_para_imprimir)
 
-        dict_esperado = [
+        raiz_comum = {
+            "Dirf_1": "2023",
+            "Dirf_2": "2022",
+            "Dirf_3": "N",
+            "Dirf_4": "",
+            "Dirf_5": "ARNZRXP",
+            "DECPJ_1": "17316563000196",
+            "DECPJ_2": "CÂMARA MUNICIPAL DE BELO HORIZONTE",
+            "DECPJ_3": "2",
+            "DECPJ_4": "03581384698",
+            "DECPJ_5": "N",
+            "DECPJ_6": "N",
+            "DECPJ_7": "N",
+            "DECPJ_8": "N",
+            "DECPJ_9": "S",
+            "DECPJ_10": "N",
+            "DECPJ_11": "N",
+            "DECPJ_12": "N",
+            "DECPJ_13": "",
+            "IDREC_1": "0561",
+        }
+
+        dict_esperado = [raiz_comum.copy(), raiz_comum.copy()]
+        dict_esperado[0].update(
             {
                 "BPFDEC_1": "00000000004",
                 "BPFDEC_2": "ANDRE",
@@ -90,7 +113,9 @@ class TestArvoreDirf:
                 "RTPA_11": "99695",
                 "RTPA_12": "118526",
                 "RTPA_13": "86744",
-            },
+            }
+        )
+        dict_esperado[1].update(
             {
                 "BPFDEC_1": "00000000004",
                 "BPFDEC_2": "ANDRE",
@@ -114,8 +139,8 @@ class TestArvoreDirf:
                 "RTPA_11": "99695",
                 "RTPA_12": "118526",
                 "RTPA_13": "86744",
-            },
-        ]
+            }
+        )
 
         assert dict_normalizado == dict_esperado
 
@@ -123,9 +148,39 @@ class TestArvoreDirf:
         arvore = ArvoreDIRF(DIRF_FIXTURE)
         arvore.monta_arvore()
         df_resultado = arvore.converte_em_tabela(
-            tipos=["BPFDEC", "RTRT", "RIO"], chaves=["BPFDEC_1"]
+            tipos=["Dirf", "DECPJ", "IDREC", "BPFDEC", "RTRT", "RIO"],
+            chaves=["BPFDEC_1"],
         )
         dados_esperados = {
+            "Dirf_1": ["2023", "2023", "2023", "2023"],
+            "Dirf_2": ["2022", "2022", "2022", "2022"],
+            "Dirf_3": ["N", "N", "N", "N"],
+            "Dirf_4": ["", "", "", ""],
+            "Dirf_5": ["ARNZRXP", "ARNZRXP", "ARNZRXP", "ARNZRXP"],
+            "DECPJ_1": [
+                "17316563000196",
+                "17316563000196",
+                "17316563000196",
+                "17316563000196",
+            ],
+            "DECPJ_2": [
+                "CÂMARA MUNICIPAL DE BELO HORIZONTE",
+                "CÂMARA MUNICIPAL DE BELO HORIZONTE",
+                "CÂMARA MUNICIPAL DE BELO HORIZONTE",
+                "CÂMARA MUNICIPAL DE BELO HORIZONTE",
+            ],
+            "DECPJ_3": ["2", "2", "2", "2"],
+            "DECPJ_4": ["03581384698", "03581384698", "03581384698", "03581384698"],
+            "DECPJ_5": ["N", "N", "N", "N"],
+            "DECPJ_6": ["N", "N", "N", "N"],
+            "DECPJ_7": ["N", "N", "N", "N"],
+            "DECPJ_8": ["N", "N", "N", "N"],
+            "DECPJ_9": ["S", "S", "S", "S"],
+            "DECPJ_10": ["N", "N", "N", "N"],
+            "DECPJ_11": ["N", "N", "N", "N"],
+            "DECPJ_12": ["N", "N", "N", "N"],
+            "DECPJ_13": ["", "", "", ""],
+            "IDREC_1": ["0561", "0561", "0561", "3533"],
             "BPFDEC_1": ["00000000002", "00000000003", "00000000004", "00000000007"],
             "BPFDEC_2": ["JOAO", "ANNE", "ANDRE", "CELIA"],
             "BPFDEC_3": ["", "", "", ""],

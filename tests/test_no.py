@@ -99,7 +99,7 @@ class TestNo:
             {"A_1": "DadoA", "B_1": "DadoB1"},
             {"A_1": "DadoA", "B_1": "DadoB2"},
         ]
-        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+        arvore.normaliza_tronco_arvore({}, tipos_para_imprimir, resultado)
 
         assert resultado == resultado_esperado
 
@@ -110,7 +110,7 @@ class TestNo:
             {"A_1": "DadoA", "C_1": "DadoC1", "D_1": "DadoD1"},
             {"A_1": "DadoA", "C_1": "DadoC2", "D_1": "DadoD2"},
         ]
-        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+        arvore.normaliza_tronco_arvore({}, tipos_para_imprimir, resultado)
 
         assert resultado == resultado_esperado
 
@@ -122,18 +122,26 @@ class TestNo:
             {"A_1": "DadoA", "C_1": "DadoC2", "D_1": "DadoD2"},
             {"A_1": "DadoA", "C_1": "DadoC2", "E_1": "DadoE1"},
         ]
-        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+        arvore.normaliza_tronco_arvore({}, tipos_para_imprimir, resultado)
 
         assert resultado == resultado_esperado
 
     def test_normalizacao_hierarquias_2_a_3_com_2_tipos(self, arvore: No):
-        tipos_para_imprimir = ["C", "D", "E"]
+        tipos_para_imprimir = ["A", "C", "D", "E"]
         resultado = []
         resultado_esperado = [
-            {"C_1": "DadoC1", "D_1": "DadoD1"},
-            {"C_1": "DadoC2", "D_1": "DadoD2"},
-            {"C_1": "DadoC2", "E_1": "DadoE1"},
+            {"A_1": "DadoA", "C_1": "DadoC1", "D_1": "DadoD1"},
+            {"A_1": "DadoA", "C_1": "DadoC2", "D_1": "DadoD2"},
+            {"A_1": "DadoA", "C_1": "DadoC2", "E_1": "DadoE1"},
         ]
-        arvore.normaliza_sub_arvore({}, tipos_para_imprimir, resultado)
+        arvore.normaliza_tronco_arvore({}, tipos_para_imprimir, resultado)
+
+        assert resultado == resultado_esperado
+
+    def test_normalizacao_sem_raiz_eh_vazia(self, arvore: No):
+        tipos_para_imprimir = ["C", "D", "E"]
+        resultado = []
+        resultado_esperado = []
+        arvore.normaliza_tronco_arvore({}, tipos_para_imprimir, resultado)
 
         assert resultado == resultado_esperado

@@ -46,18 +46,22 @@ source venv/bin/activate
 
 O método `converte_em_tabela` da classe `ArvoreDIRF` é capaz de gerar uma tabela a partir de alguns tipos de linha da DIRF.
 
-Para que a geração seja bem-sucedida, é necessário escolher com cuidado os tipos de linha da DIRF que se deseja, bem como informar as chaves adequadas. Para mais informações, consulte a documentação dos métodos `ArvoreDIRF.normaliza_sub_arvore` e  `ArvoreDIRF.converte_em_tabela`.
+Para que a geração seja bem-sucedida, é necessário informar todos os tipos que se deseja na tabela, sendo obrigatório informar da "raiz" à "folha", ou seja,  sempre devemos informar o tipo "Dirf" e pelo menos um tipo que não tenha informações aninhadas (ex: RTRT). Se não for informado nenhum tipo folha, nada será gerado (ex: se informar os tipos [Dirf, DECPJ, IDREC, BPFDEC], nada será gerado).
+
+É necessário também informar as chaves, ou seja, os elementos que são capazes de identificar uma linha como única.
+
+Para mais informações, consulte a documentação dos métodos `ArvoreDIRF.normaliza_tronco_arvore` e  `ArvoreDIRF.converte_em_tabela`.
 
 ### Exemplo com chaves (identificação) em dois níveis
 
-Por exemplo, caso se deseje informações de pensão alimentícia, INFPA e RTPA, é necessário ter também o BPFDEC, que possui os dados do declarante. As chaves devem ser o CPF do declarante (campo BPFDEC_1) e o CPF do beneficiário (campo INFPA_1), conforme mostrado abaixo:
+Por exemplo, caso se deseje informações de pensão alimentícia, INFPA e RTPA, é necessário informar todos os tipos anteriores, ou seja, Dirf, DECPJ, IDREC e BPFDEC. As chaves devem ser o CPF do declarante (campo BPFDEC_1) e o CPF do beneficiário (campo INFPA_1), conforme mostrado abaixo:
 ```python
 from src.arvore_dirf import ArvoreDIRF
 
 arvore = ArvoreDIRF(diretorio_arquivo_dirf)
 arvore.monta_arvore()
 df_resultado = arvore.converte_em_tabela(
-    tipos=["BPFDEC", "INFPA", "RTPA"], chaves=["BPFDEC_1", "INFPA_1"]
+    tipos=["Dirf", "DECPJ", "IDREC", "BPFDEC", "INFPA", "RTPA"], chaves=["BPFDEC_1", "INFPA_1"]
 )
 ```
 
@@ -72,7 +76,7 @@ from src.arvore_dirf import ArvoreDIRF
 arvore = ArvoreDIRF(diretorio_arquivo_dirf)
 arvore.monta_arvore()
 df_resultado = arvore.converte_em_tabela(
-    tipos=["BPFDEC", "RTRT", "RTIRF"], chaves=["BPFDEC_1"]
+    tipos=["Dirf", "DECPJ", "IDREC", "BPFDEC", "RTRT", "RTIRF"], chaves=["BPFDEC_1"]
 )
 ```
 O resultado é uma linha para cada declarante que possua um registro RTRT ou RTIRF. Caso o declarante não possua algum dos dois registros, constará a variável `np.nan` nas colunas.
