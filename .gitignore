@@ -162,3 +162,7 @@ cython_debug/
 # Sensitive data
 dirf_aeros.txt
 dirf_arte.txt
+pensao_alimenticia_*
+plano_saude_*
+rendimentos_declarante_*
+rra_*

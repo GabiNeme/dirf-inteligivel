@@ -6,4 +6,7 @@ coverage==7.2.3
 pre-commit==2.21.0
 
 # Facilita gerencia de tabelas
-pandas==2.0.1
+pandas==1.5.2
+
+# Compara dados
+datacompy==0.8.4

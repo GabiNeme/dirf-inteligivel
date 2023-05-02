@@ -85,6 +85,28 @@ O resultado é uma linha para cada declarante que possua um registro RTRT ou RTI
 
 Se tem algum tipo de registro da DIRF que não está contemplada nesse repositório, altere a variável `ESTRUTURA_DIRF` no arquivo `src/arvore_dirf.py`.
 
+## Como comparar informações da DIRF
+Foi criado um comparador automático, que utiliza a estrutura da DIRF especificada no tópico anterior e compara:
+- Rendimentos do declarante
+- Pensão alimentícia
+- RRA
+- Plano de saúde
+
+Para cada tópico são gerados 4 arquivos:
+- Relatório em inglês com os 10 primeiros exemplos de cada diferença encontrada.
+- Interseção: comparação 1 a 1 de todas as linhas que aparecem no Arte e no Aeros
+- Só em 1: linhas que só aparecem no Arte
+- Só em 2: linhas que só aparecem no Aeros
+
+Para executar, basta digitar:
+```
+python main.py diretorio_dirf_arte diretorio_dirf_aeros
+```
+Exemplo:
+```
+python main.py dirf_arte.txt dirf_aeros.txt
+```
+
 ## Rodar os testes
 Execute:
 ```
