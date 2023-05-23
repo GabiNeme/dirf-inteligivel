@@ -44,42 +44,35 @@ source venv/bin/activate
 
 ## Como transformar a DIRF em uma tabela
 
-O método `converte_em_tabela` da classe `ArvoreDIRF` é capaz de gerar uma tabela a partir de alguns tipos de linha da DIRF.
+O módulo `converte_tabela` é capaz de gerar uma tabela a partir de alguns tipos de linha da DIRF.
 
 Para que a geração seja bem-sucedida, é necessário informar todos os tipos que se deseja na tabela, sendo obrigatório informar da "raiz" à "folha", ou seja,  sempre devemos informar o tipo "Dirf" e pelo menos um tipo que não tenha informações aninhadas (ex: RTRT). Se não for informado nenhum tipo folha, nada será gerado (ex: se informar os tipos [Dirf, DECPJ, IDREC, BPFDEC], nada será gerado).
 
-É necessário também informar as chaves, ou seja, os elementos que são capazes de identificar uma linha como única.
+É necessário também informar as chaves, ou seja, os elementos que são capazes de identificar uma linha como única. Essas chaves são identificadas pelo identificador da linha (ex BPFDEC) concatenado com um underline ("_") e pelo número que corresponde à ordem do dado desejado naquela linha. Por exemplo, o CPF está na primeira posição do registro BPFDEC depois do identificador, então a chave seria `BPFDEC_1`.
 
 Para mais informações, consulte a documentação dos métodos `ArvoreDIRF.normaliza_tronco_arvore` e  `ArvoreDIRF.converte_em_tabela`.
+
+Para converter a DIRF em tabela, devemos executar a seguinte linha, substituindo as informações entre chevrons (ex: \<substitua aqui>):
+```
+python converte_tabela.py --diretorio_dirf <diretorio_dirf> --tipos <lista de tipos> --chaves <lista_de_chaves> --saida_tabela <nome_arquivo_saida>
+```
 
 ### Exemplo com chaves (identificação) em dois níveis
 
 Por exemplo, caso se deseje informações de pensão alimentícia, INFPA e RTPA, é necessário informar todos os tipos anteriores, ou seja, Dirf, DECPJ, IDREC e BPFDEC. As chaves devem ser o CPF do declarante (campo BPFDEC_1) e o CPF do beneficiário (campo INFPA_1), conforme mostrado abaixo:
-```python
-from src.arvore_dirf import ArvoreDIRF
-
-arvore = ArvoreDIRF(diretorio_arquivo_dirf)
-arvore.monta_arvore()
-df_resultado = arvore.converte_em_tabela(
-    tipos=["Dirf", "DECPJ", "IDREC", "BPFDEC", "INFPA", "RTPA"], chaves=["BPFDEC_1", "INFPA_1"]
-)
+```
+python converte_tabela.py --diretorio_dirf dirf_arte.txt --tipos Dirf DECPJ IDREC BPFDEC INFPA RTPA --chaves BPFDEC_1 INFPA_1 --saida_tabela tabela_dirf_benefic.csv
 ```
 
-A variável `df_resultado` é um Dataframe, em que apenas os declarantes que pagam pensão alimentícia terão uma linha para cada beneficiário.
+O resultado é uma tabela em CSV, em que apenas os declarantes que pagam pensão alimentícia terão uma linha para cada beneficiário.
 
 ### Exemplo com dois tipos de registros no mesmo declarante
 
 Outro exemplo poderia ser gerar uma tabela com os dados das linhas RTRT e RTIRF, no qual deseja-se que haja apenas uma linha para cada declarante, para isso, poderia-se usar o código:
-```python
-from src.arvore_dirf import ArvoreDIRF
-
-arvore = ArvoreDIRF(diretorio_arquivo_dirf)
-arvore.monta_arvore()
-df_resultado = arvore.converte_em_tabela(
-    tipos=["Dirf", "DECPJ", "IDREC", "BPFDEC", "RTRT", "RTIRF"], chaves=["BPFDEC_1"]
-)
 ```
-O resultado é uma linha para cada declarante que possua um registro RTRT ou RTIRF. Caso o declarante não possua algum dos dois registros, constará a variável `np.nan` nas colunas.
+python converte_tabela.py --diretorio_dirf dirf_arte.txt --tipos Dirf DECPJ IDREC BPFDEC RTRT RTIRF --chaves BPFDEC_1 --saida_tabela tabela_dirf_imposto.csv
+```
+O resultado é uma linha para cada declarante que possua um registro RTRT ou RTIRF. Caso o declarante não possua algum dos dois registros, sua coluna ficará vazia.
 
 ### Caso alguma linha desejada não esteja contemplada no código
 
@@ -98,13 +91,13 @@ Para cada tópico são gerados 4 arquivos:
 - Só em 1: linhas que só aparecem no Arte
 - Só em 2: linhas que só aparecem no Aeros
 
-Para executar, basta digitar:
+Para executar, evemos executar a seguinte linha, substituindo as informações entre chevrons (ex: \<substitua aqui>)::
 ```
-python main.py diretorio_dirf_arte diretorio_dirf_aeros
+python compara.py --diretorio_dirf_arte <diretorio_dirf_arte> --diretorio_dirf_aeros <diretorio_dirf_aeros>
 ```
 Exemplo:
 ```
-python main.py dirf_arte.txt dirf_aeros.txt
+python compara.py --diretorio_dirf_arte dirf_arte.txt --diretorio_dirf_aeros dirf_aeros.txt
 ```
 
 ## Rodar os testes
